@@ -1,0 +1,33 @@
+name: Test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v4
+
+      - name: Install Haoke CLI
+        uses: ./.
+
+      - name: Test binary
+        run: haoke-cli --version
+
+      - name: Clone FroshTools
+        run: git clone https://github.com/haokeyingxiao-hub/FroshTools.git
+
+      - name: Zip FroshTools
+        run: haoke-cli extension zip FroshTools
+
+      - name: Validate
+        run: haoke-cli extension validate FroshTools-*.zip
